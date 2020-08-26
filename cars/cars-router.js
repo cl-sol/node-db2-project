@@ -2,14 +2,14 @@ const express = require("express");
 const knex = require("knex");
 const db = require("../data/config");
 
-const Router = express.Router();
+const router = express.Router();
 
 //crud - get/post/put/delete
 // /api/cars
 
 router.get("/", async (req, res, next) => {
     try{
-        const data = await db.select("*").from("cars");
+        const cars = await db.select("*").from("cars");
         res.status(200).json({
             data: cars
         })
@@ -36,9 +36,11 @@ router.get("/:id", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
     try {
         const carsData = req.body;
-        const data = await db("cars").insert(carsData)
-        res.status(201).json(carsData)
+        const data = await db("cars").insert(carsData, "id")
+        res.status(201).json(data)
     } catch(err) {
         next(err);
     }
 });
+
+module.exports = router;
